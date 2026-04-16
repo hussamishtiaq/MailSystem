@@ -44,6 +44,7 @@
 // }
 
 using System.Text;
+using MailSystem.API.Middlewear;
 using MailSystem.Infrastructure;
 using MailSystem.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -93,6 +94,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
