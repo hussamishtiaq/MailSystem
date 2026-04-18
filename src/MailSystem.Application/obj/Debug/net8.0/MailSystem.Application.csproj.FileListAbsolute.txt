@@ -1,0 +1,16 @@
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/bin/Debug/net8.0/MailSystem.Application.deps.json
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/bin/Debug/net8.0/MailSystem.Application.dll
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/bin/Debug/net8.0/MailSystem.Application.pdb
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/bin/Debug/net8.0/MailSystem.Domain.dll
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/bin/Debug/net8.0/MailSystem.Domain.pdb
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.csproj.AssemblyReference.cache
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.AssemblyInfoInputs.cache
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.AssemblyInfo.cs
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.csproj.CoreCompileInputs.cache
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.sourcelink.json
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSyst.96BBA7D3.Up2Date
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.dll
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/refint/MailSystem.Application.dll
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/MailSystem.Application.pdb
+/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Application/obj/Debug/net8.0/ref/MailSystem.Application.dll

@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {}
+    "net8.0": {
+      "MailSystem.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/MailSystem.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/MailSystem.Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "MailSystem.Domain/1.0.0": {
+      "type": "project",
+      "path": "../MailSystem.Domain/MailSystem.Domain.csproj",
+      "msbuildProject": "../MailSystem.Domain/MailSystem.Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0": []
+    "net8.0": [
+      "MailSystem.Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "/home/hussam/.nuget/packages/": {}
@@ -31,7 +50,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Domain/MailSystem.Domain.csproj": {
+              "projectPath": "/home/hussam/hussam/C# ALL/MailSystem/src/MailSystem.Domain/MailSystem.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
