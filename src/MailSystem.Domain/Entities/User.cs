@@ -15,4 +15,8 @@ public class User : AuditableEntity
     public DateTime? DeletedAt { get; set; }
 
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    public ICollection<Message> SentMessages { get; set; } = new List<Message>();
+    public ICollection<MessageRecipient> ReceivedRecipients { get; set; } = new List<MessageRecipient>();
+    public ICollection<MailboxEntry> MailboxEntries { get; set; } = new List<MailboxEntry>();
+    public ICollection<Conversation> CreatedConversations { get; set; } = new List<Conversation>();
 }
