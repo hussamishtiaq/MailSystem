@@ -11,6 +11,10 @@ public class MailDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<Conversation> Conversations => Set<Conversation>();
+    public DbSet<Message> Messages => Set<Message>();   
+    public DbSet<MessageRecipient> MessageRecipients => Set<MessageRecipient>();
+    public DbSet<MailboxEntry> MailboxEntries => Set<MailboxEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
