@@ -39,7 +39,8 @@ namespace MailSystem.Persistence.Migrations
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -48,7 +49,9 @@ namespace MailSystem.Persistence.Migrations
 
                     b.HasIndex("CreatedByUserId");
 
-                    b.ToTable("Conversation");
+                    b.HasIndex("LastMessageAt");
+
+                    b.ToTable("Conversations", (string)null);
                 });
 
             modelBuilder.Entity("MailSystem.Domain.Entities.MailboxEntry", b =>
@@ -67,16 +70,24 @@ namespace MailSystem.Persistence.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("IsImportant")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("IsRead")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("IsStarred")
-                        .HasColumnType("tinyint(1)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("MailboxType")
                         .HasColumnType("int");
@@ -98,11 +109,11 @@ namespace MailSystem.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MessageId");
+                    b.HasIndex("MessageId", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "MailboxType", "ReceivedAt");
 
-                    b.ToTable("MailboxEntry");
+                    b.ToTable("MailboxEntries", (string)null);
                 });
 
             modelBuilder.Entity("MailSystem.Domain.Entities.Message", b =>
@@ -112,10 +123,10 @@ namespace MailSystem.Persistence.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("BodyHtml")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BodyText")
-                        .HasColumnType("longtext");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ConversationId")
                         .HasColumnType("char(36)");
@@ -137,20 +148,23 @@ namespace MailSystem.Persistence.Migrations
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConversationId");
+                    b.HasIndex("IsDraft");
 
                     b.HasIndex("ParentMessageId");
 
-                    b.HasIndex("SenderUserId");
+                    b.HasIndex("ConversationId", "CreatedAt");
 
-                    b.ToTable("Message");
+                    b.HasIndex("SenderUserId", "SentAt");
+
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("MailSystem.Domain.Entities.MessageRecipient", b =>
@@ -180,7 +194,9 @@ namespace MailSystem.Persistence.Migrations
 
                     b.HasIndex("RecipientUserId");
 
-                    b.ToTable("MessageRecipient");
+                    b.HasIndex("MessageId", "RecipientUserId", "RecipientType");
+
+                    b.ToTable("MessageRecipients", (string)null);
                 });
 
             modelBuilder.Entity("MailSystem.Domain.Entities.RefreshToken", b =>
@@ -282,7 +298,7 @@ namespace MailSystem.Persistence.Migrations
                     b.HasOne("MailSystem.Domain.Entities.User", "CreatedByUser")
                         .WithMany("CreatedConversations")
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
@@ -299,7 +315,7 @@ namespace MailSystem.Persistence.Migrations
                     b.HasOne("MailSystem.Domain.Entities.User", "User")
                         .WithMany("MailboxEntries")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Message");
@@ -317,12 +333,13 @@ namespace MailSystem.Persistence.Migrations
 
                     b.HasOne("MailSystem.Domain.Entities.Message", "ParentMessage")
                         .WithMany("Replies")
-                        .HasForeignKey("ParentMessageId");
+                        .HasForeignKey("ParentMessageId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("MailSystem.Domain.Entities.User", "SenderUser")
                         .WithMany("SentMessages")
                         .HasForeignKey("SenderUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Conversation");
@@ -343,7 +360,7 @@ namespace MailSystem.Persistence.Migrations
                     b.HasOne("MailSystem.Domain.Entities.User", "RecipientUser")
                         .WithMany("ReceivedRecipients")
                         .HasForeignKey("RecipientUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Message");

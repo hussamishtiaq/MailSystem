@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MailSystem.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMySql : Migration
+    public partial class InitialMySqlClean : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,11 +41,11 @@ namespace MailSystem.Persistence.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Conversation",
+                name: "Conversations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Subject = table.Column<string>(type: "longtext", nullable: false)
+                    Subject = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedByUserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     LastMessageAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -54,13 +54,13 @@ namespace MailSystem.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Conversation", x => x.Id);
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Conversation_Users_CreatedByUserId",
+                        name: "FK_Conversations_Users_CreatedByUserId",
                         column: x => x.CreatedByUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -93,19 +93,17 @@ namespace MailSystem.Persistence.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Message",
+                name: "Messages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     ConversationId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     SenderUserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     ParentMessageId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    Subject = table.Column<string>(type: "longtext", nullable: false)
+                    Subject = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    BodyText = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    BodyHtml = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BodyText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BodyHtml = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDraft = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     SentAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -113,39 +111,40 @@ namespace MailSystem.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Message", x => x.Id);
+                    table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Message_Conversation_ConversationId",
+                        name: "FK_Messages_Conversations_ConversationId",
                         column: x => x.ConversationId,
-                        principalTable: "Conversation",
+                        principalTable: "Conversations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Message_Message_ParentMessageId",
+                        name: "FK_Messages_Messages_ParentMessageId",
                         column: x => x.ParentMessageId,
-                        principalTable: "Message",
-                        principalColumn: "Id");
+                        principalTable: "Messages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Message_Users_SenderUserId",
+                        name: "FK_Messages_Users_SenderUserId",
                         column: x => x.SenderUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "MailboxEntry",
+                name: "MailboxEntries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     MessageId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     MailboxType = table.Column<int>(type: "int", nullable: false),
-                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    IsStarred = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    IsImportant = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsRead = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    IsStarred = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    IsImportant = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ArchivedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     SpamMarkedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -155,24 +154,24 @@ namespace MailSystem.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MailboxEntry", x => x.Id);
+                    table.PrimaryKey("PK_MailboxEntries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MailboxEntry_Message_MessageId",
+                        name: "FK_MailboxEntries_Messages_MessageId",
                         column: x => x.MessageId,
-                        principalTable: "Message",
+                        principalTable: "Messages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MailboxEntry_Users_UserId",
+                        name: "FK_MailboxEntries_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "MessageRecipient",
+                name: "MessageRecipients",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -184,61 +183,76 @@ namespace MailSystem.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MessageRecipient", x => x.Id);
+                    table.PrimaryKey("PK_MessageRecipients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MessageRecipient_Message_MessageId",
+                        name: "FK_MessageRecipients_Messages_MessageId",
                         column: x => x.MessageId,
-                        principalTable: "Message",
+                        principalTable: "Messages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MessageRecipient_Users_RecipientUserId",
+                        name: "FK_MessageRecipients_Users_RecipientUserId",
                         column: x => x.RecipientUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Conversation_CreatedByUserId",
-                table: "Conversation",
+                name: "IX_Conversations_CreatedByUserId",
+                table: "Conversations",
                 column: "CreatedByUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MailboxEntry_MessageId",
-                table: "MailboxEntry",
+                name: "IX_Conversations_LastMessageAt",
+                table: "Conversations",
+                column: "LastMessageAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MailboxEntries_MessageId_UserId",
+                table: "MailboxEntries",
+                columns: new[] { "MessageId", "UserId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MailboxEntries_UserId_MailboxType_ReceivedAt",
+                table: "MailboxEntries",
+                columns: new[] { "UserId", "MailboxType", "ReceivedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageRecipients_MessageId",
+                table: "MessageRecipients",
                 column: "MessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MailboxEntry_UserId",
-                table: "MailboxEntry",
-                column: "UserId");
+                name: "IX_MessageRecipients_MessageId_RecipientUserId_RecipientType",
+                table: "MessageRecipients",
+                columns: new[] { "MessageId", "RecipientUserId", "RecipientType" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_ConversationId",
-                table: "Message",
-                column: "ConversationId");
+                name: "IX_MessageRecipients_RecipientUserId",
+                table: "MessageRecipients",
+                column: "RecipientUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_ParentMessageId",
-                table: "Message",
+                name: "IX_Messages_ConversationId_CreatedAt",
+                table: "Messages",
+                columns: new[] { "ConversationId", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_IsDraft",
+                table: "Messages",
+                column: "IsDraft");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ParentMessageId",
+                table: "Messages",
                 column: "ParentMessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Message_SenderUserId",
-                table: "Message",
-                column: "SenderUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MessageRecipient_MessageId",
-                table: "MessageRecipient",
-                column: "MessageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MessageRecipient_RecipientUserId",
-                table: "MessageRecipient",
-                column: "RecipientUserId");
+                name: "IX_Messages_SenderUserId_SentAt",
+                table: "Messages",
+                columns: new[] { "SenderUserId", "SentAt" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_Token",
@@ -268,19 +282,19 @@ namespace MailSystem.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MailboxEntry");
+                name: "MailboxEntries");
 
             migrationBuilder.DropTable(
-                name: "MessageRecipient");
+                name: "MessageRecipients");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "Message");
+                name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "Conversation");
+                name: "Conversations");
 
             migrationBuilder.DropTable(
                 name: "Users");

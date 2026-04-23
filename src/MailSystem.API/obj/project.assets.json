@@ -1489,7 +1489,10 @@
         },
         "runtime": {
           "bin/placeholder/MailSystem.Infrastructure.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "MailSystem.Persistence/1.0.0": {
         "type": "project",

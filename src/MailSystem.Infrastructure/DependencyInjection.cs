@@ -1,6 +1,8 @@
 using MailSystem.Application.Abstractions.Authentication;
 using MailSystem.Application.Abstractions.Clock;
+using MailSystem.Application.Abstractions.CurrentUser;
 using MailSystem.Infrastructure.Authentication;
+using MailSystem.Infrastructure.CurrentUser;
 using MailSystem.Infrastructure.Time;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddSingleton<IClock, SystemClock>();
 
         return services;

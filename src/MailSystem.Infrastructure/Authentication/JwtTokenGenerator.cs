@@ -26,12 +26,14 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new("fullName", user.FullName)
-        };
+       var claims = new List<Claim>
+    {
+        new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new(JwtRegisteredClaimNames.Email, user.Email),
+        new(ClaimTypes.Email, user.Email),
+        new("fullName", user.FullName)
+    };
 
         var token = new JwtSecurityToken(
             issuer: jwtSettings["Issuer"],
