@@ -16,12 +16,6 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
             .IsRequired()
             .HasMaxLength(300);
 
-        builder.Property(x => x.BodyText)
-            .HasColumnType("nvarchar(max)");
-
-        builder.Property(x => x.BodyHtml)
-            .HasColumnType("nvarchar(max)");
-
         builder.HasOne(x => x.Conversation)
             .WithMany(x => x.Messages)
             .HasForeignKey(x => x.ConversationId)
