@@ -8,4 +8,5 @@ public class UpdateDraftRequest
     public List<Guid> ToUserIds { get; set; } = new();
     public List<Guid> CcUserIds { get; set; } = new();
     public List<Guid> BccUserIds { get; set; } = new();
+    
 }
