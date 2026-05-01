@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/MailSystem.API.props" />
-</Project>
